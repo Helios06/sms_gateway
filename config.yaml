@@ -1,0 +1,34 @@
+name: "SMS Gateway"
+description: "SMS Gateway to MQTT on Huawei USB Dongle"
+version: "1.0.2"
+slug: "sms_gateway"
+init: false
+arch:
+  - aarch64
+  - amd64
+  - armhf
+  - armv7
+  - i386
+options:
+  GSM_Mode: "Choose here 'modem' or 'api'"
+  GSM_Device: "/dev/ttyUSB1"
+  GSM_PIN: "5061"
+  MQTT_Host: "homeassistant.local"
+  MQTT_Port: 1883
+  MQTT_User: "mqtt"
+  MQTT_Password: "mqtt"
+schema:
+  GSM_Mode: str
+  GSM_Device: str
+  GSM_PIN: str
+  MQTT_Host: str
+  MQTT_Port: int
+  MQTT_User: str
+  MQTT_Password: str
+startup: services
+devices:
+  - /dev/ttyACM0:/dev/ttyACM0
+  - /dev/ttyACM1:/dev/ttyACM1
+  - /dev/ttyUSB0:/dev/ttyUSB0
+  - /dev/ttyUSB1:/dev/ttyUSB1
+  - /dev/ttyUSB2:/dev/ttyUSB2
