@@ -1,6 +1,6 @@
 #
 #   sms_manager
-#   Copyright (c) Philippe Romano, 2021-2024
+#   Copyright (c) Helios06, 2023-2024
 #
 #   Home Assistant addon with slug: sms_gateway
 #   Handles MQTT broker messages to send sms or for received sms
@@ -50,7 +50,7 @@ def main_modem(options):
 
     # Start gateway
     logging.info('Starting SMS gateway')
-    sms_gateway = gsm("Huawei", options.mode, options.device, options.pin, mqtt_client)
+    sms_gateway = gsm("Huawei", options.mode, options.device, options.pin, options.auth, options.recv, mqtt_client)
     sms_gateway.start()
     while not sms_gateway.Ready:
         pass
@@ -84,20 +84,26 @@ def main(args=None):
         parser.add_argument("--mode", dest="mode", help="modem or api", default="modem")
         parser.add_argument("-d", "--device", dest="device", help="USB device name", default="/dev/USB0")
         parser.add_argument("--pin", dest="pin", help="code pin", default="0000")
+        parser.add_argument("--auth", dest="auth", help="authorized numbers", default="")
         parser.add_argument("-u", "--user", dest="user", help="mqtt user", default="xxxx")
         parser.add_argument("-s", "--secret", dest="secret", help="mqtt user password", default="xxxx")
         parser.add_argument("-r", "--host", dest="host", help="mqtt host", default="")
         parser.add_argument("-p", "--port", dest="port", help="mqtt port", default=0)
+        parser.add_argument("--send", dest="send", help="mqtt send", default="send_sms")
+        parser.add_argument("--recv", dest="recv", help="mqtt receive", default="sms_received")
         options = parser.parse_args(args)
         logging.info('... Arguments parsed:')
         logging.info('...... mode is: '+options.mode)
         logging.info('...... device is: '+options.device)
         logging.info('...... pin is: '+options.pin)
+        logging.info('...... auth is: '+options.auth)
         logging.info('...... mqtt user is: '+options.user)
         logging.info('...... mqtt user secret is: '+options.secret)
         logging.info('...... mqtt host is: '+options.host)
         logging.info('...... mqtt port is: '+options.port)
-    except (Exception,) as e:
+        logging.info('...... mqtt send is: '+options.send)
+        logging.info('...... mqtt recv is: '+options.recv)
+    except (Exception,):
         return None
 
     # Handle MQTT
@@ -106,7 +112,7 @@ def main(args=None):
     port = int(options.port)
     user = options.user
     password = options.secret
-    topic = "send_sms"
+    topic = options.send        # "send_sms"
 
     mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     mqtt_client.on_message = on_message
@@ -119,7 +125,7 @@ def main(args=None):
         main_modem(options)
     else:
         logging.info('Error ! specify options "mode"')
-        pass
+    pass
 
 
 if __name__ == '__main__':

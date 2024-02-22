@@ -13,7 +13,6 @@ COPY run.sh /
 COPY sms_manager.py /
 COPY gsm.py /
 COPY gsm_io.py /
-COPY authentication.py /
 
 RUN chmod a+x /run.sh
 

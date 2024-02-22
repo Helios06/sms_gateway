@@ -1,5 +1,5 @@
 """
-    Copyright (c) Philippe Romano, 2021, 2022, 2023
+    Copyright (c) Helios06, 2023-2024
 """
 
 import time
@@ -7,7 +7,6 @@ import json
 import logging
 
 from gsm_io         import gsm_io
-from authentication import authentication
 from threading      import Thread, Lock
 from queue          import Queue
 
@@ -16,19 +15,17 @@ sms_alpha     = ("@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞ\x1bÆæß�
                  " !\"#¤%&'()*+,-./0123456789:;<=>?"
                  "¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§"
                  "¿abcdefghijklmnopqrstuvwxyzäöñüà")
-sms_ext_alpha = ("````````````````````^```````````````````{}`````\\````````````[~]`"
-                 "|````````````````````````````````````€``````````````````````````")
 
-class gsm(gsm_io, authentication):
+class gsm(gsm_io):
 
     ATZ = "ATZ"  # reset modem
     ATE0 = "ATE0"  # set echo off
     ATE1 = "ATE1"  # set echo on
     ATCLIP = "AT+CLIP?"  # get calling line identification presentation
     ATCMEE = "AT+CMEE=1"  # set extended error
-    #ATCPIN = "AT+CPIN=\"5061\""  # set pin code
-    #ATCLCK0 = "AT+CLCK=\"SC\",0,\"5061\""  # disable code pin check, pin=5061
-    #ATCLCK1 = "AT+CLCK=\"SC\",1,\"5061\""  # enable code pin check, pin=5061
+    #ATCPIN = "AT+CPIN=\"0000\""  # set pin code
+    #ATCLCK0 = "AT+CLCK=\"SC\",0,\"0000\""  # disable code pin check, pin=0000
+    #ATCLCK1 = "AT+CLCK=\"SC\",1,\"0000\""  # enable code pin check, pin=0000
     ATCSCS = "AT+CSCS=\"GSM\""  # force GSM mode for SMS
     ATCMGF = "AT+CMGF=1"  # enable sms in text mode
     ATCSDH = "AT+CSDH=1"  # enable more fields in sms read
@@ -43,19 +40,20 @@ class gsm(gsm_io, authentication):
     ATCREG = "AT+CREG?"  # registered on network ?
     ATCNMI = "AT+CNMI=2,1,0,0,0"  # when sms arrives CMTI send to pc
 
-    def __init__(self, name: str, mode: str, device: str, pin: str, mqtt_client):
+    def __init__(self, name: str, mode: str, device: str, pin: str, auth: str, recv: str, mqtt_client):
         self.GsmReaderThread = None
         self.GsmMode = mode
         self.MQTTClient = mqtt_client
         self.ATCPIN = "AT+CPIN=\""+pin+"\""  # set pin code
-        self.ATCLCK0 = "AT+CLCK=\"SC\",0,\""+pin+"\""  # disable code pin check, pin=5061
-        self.ATCLCK1 = "AT+CLCK=\"SC\",1,\""+pin+"\""  # enable code pin check, pin=5061
+        self.ATCLCK0 = "AT+CLCK=\"SC\",0,\""+pin+"\""  # disable code pin check, pin=0000
+        self.ATCLCK1 = "AT+CLCK=\"SC\",1,\""+pin+"\""  # enable code pin check, pin=0000
         self.GsmIoOKReceived = None
         self.GsmIoCMSSReceived = None
         self.GsmPIN = pin
+        self.Auth = auth
+        self.Recv = recv
         self.Ready = False
         self.Name = name
-        self.GsmLogLevel = 0
         self.GsmApiSem = Lock()
         self.GsmMutex = Lock()
         self.SMSQueue = Queue()
@@ -70,10 +68,8 @@ class gsm(gsm_io, authentication):
         # logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
         logging.basicConfig(level=logging.INFO)
         gsm_io.__init__(self, device)  # since inherited, needs to be called explicitly
-        authentication.__init__(self)  # since inherited, needs to be called explicitly
 
     def __del__(self):
-        authentication.__del__(self)  # since inherited, needs to be called explicitly
         gsm_io.__del__(self)  # since inherited, needs to be called explicitly
 
     def start(self):
@@ -127,9 +123,8 @@ class gsm(gsm_io, authentication):
     def sendSmsToNumber(self, number, message):
         if self.Opened:
             # message is string utf-8
-            # has to be converted to bytes to be send on modem
+            # has to be converted to bytes to be sent on modem
             logging.info(f"... Send SMS")
-            #logging.info(f"... %s", message)
             self.GsmApiSem.acquire()
             self.GsmMutex.acquire()
             self.GsmIoSmsIdReceived = False
@@ -157,7 +152,6 @@ class gsm(gsm_io, authentication):
             frame = bytes(data, 'utf-8')               # writes bytes on modem
             self.writeCommandAndWaitOK(frame)
             # cmss will arrive before 'ok'
-            # logging.info(f'... Id received: '+self.GsmIoCMSSId.decode('ascii'))
             self.GsmApiSem.release()
             logging.info(f"...... SMS sent")
             logging.info("")
@@ -189,11 +183,11 @@ class gsm(gsm_io, authentication):
                 new_sms['Msg'] = self.encodeUTF8toJSON(new_sms['Msg'])
                 json_message = {"from": new_sms['Number'], "txt": new_sms['Msg']}
                 logging.info("...... Publishing it to mqtt as JSON on topic sms_received")
-                # print("    ", json.dumps(json_message))
-                self.MQTTClient.publish("sms_received", json.dumps(json_message))
+                self.MQTTClient.publish(self.Recv, json.dumps(json_message))
             time.sleep(1)
 
-    def encodeUTF8toJSON(self, bytes_message):
+    @staticmethod
+    def encodeUTF8toJSON(bytes_message):
         # Be sure to escape " characters with \"
         logging.info('... Encode UTF-8 to JSON')
         logging.info(list(bytes_message))
@@ -204,30 +198,20 @@ class gsm(gsm_io, authentication):
             result.append(b)
         return ''.join(result)
 
-    def decodeGSM7toUTF8(self, bytes_message):
+    @staticmethod
+    def decodeGSM7toUTF8(bytes_message):
         logging.info('... Decoding GSM-7 to UTF-8')
         logging.info(list(bytes_message))
-        # logging.info(b'..... '+bytes_message)
         result = []
         for b in bytes_message:         # b is code value of character
-            '''
-            if b == 10:
-                result.append('\\')
-                result.append('n')
-            elif b == 34:
-                result.append('\\')
-                result.append('"')
-            else:
-                result.append(sms_alpha[b])
-            '''
             result.append(sms_alpha[b])
         return ''.join(result)
 
-    def encodeUTF8toGSM7(self, message):
-        # UTF-8 double byte character will be replace by specific
+    @staticmethod
+    def encodeUTF8toGSM7(message):
+        # UTF-8 double byte character will be replaced by specific
         # GSM alphabet code
         message_list = list(bytes(message, 'utf-8'))
-        #logging.info(message_list)
         logging.info('...... Encoding UTF-8 to GSM-7')
         waitCode195 = False
         waitCode194 = False
@@ -340,8 +324,12 @@ class gsm(gsm_io, authentication):
                         result += bytes([c])
         logging.info(result)
         sms = result + b'\x1A'
-        #sms = result
         return sms
+
+    def isAuthorized(self, number):
+        if number in self.Auth:
+            return True
+        return False
 
     def readNewSms(self):
         # Read for MQTT in JSON
@@ -381,7 +369,6 @@ class gsm(gsm_io, authentication):
                     elif message['Status'] != "REC UNREAD" and message['Status'] != "REC READ":
                         result = None
                     else:
-                        # logging.info(f"... Sms received: %s", message['Msg'])
                         result = message
                 except (Exception,):
                     result = None
