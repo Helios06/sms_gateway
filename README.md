@@ -10,7 +10,6 @@ Communication / integration with Home Assistant is realized
 using 2 MQTT topics. One for HA scripts to send SMS (`send_sms`) and another one to handle 
 SMS reception and passing back SMS to Home Assistant (`sms_received`)
 
-See repo: https://github.com/Helios06/sms_gateway
 
 ## Version
 **sms_gateway** v1.0.7
@@ -21,24 +20,24 @@ Use the provided _Dockerfile_ and _run.sh_ to build and run the image.
 
 ## Home Assistant requirements
 
-On your Home Assistant you must have configured several add-ons
-- **Mosquito broker (MQTT)**
+On your Home Assistant you must have configured 2 needed add-ons
+- **MQTT (like Mosquito broker)**
   - define 2 topics to send and receive SMS (by default `send_sms` and `sms_received` are proposed)
 - **Samba Share**
   - used to update add-on local directory on your Home Assistant installation.
   
 ## Add-on configuration
 
-    GSM_Mode: "Choose here 'modem' or 'api'"
-    GSM_Device: "/dev/ttyUSB1"
-    GSM_PIN: "0000"
-    GSM_AUTH: " +336XXXXXXXX"
-    MQTT_Host: "homeassistant.local"
+    GSM_Mode: modem
+    GSM_Device: /dev/ttyUSB1
+    GSM_PIN: 0000
+    GSM_AUTH: "+336XXXXXXXX,+336YYYYYYYY"
+    MQTT_Host: homeassistant.local
     MQTT_Port: 1883
-    MQTT_User: "mqtt"
-    MQTT_Password: "mqtt"
-    MQTT_Receive: "sms_received"
-    MQTT_Send: "send_sms"
+    MQTT_User: mqtt
+    MQTT_Password: mqtt
+    MQTT_Receive: sms_received
+    MQTT_Send: send_sms
 
 GSM_Mode : 'modem' ('api' under construction)
 
