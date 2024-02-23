@@ -22,7 +22,7 @@ Use the provided _Dockerfile_ and _run.sh_ to build and run the image.
 
 # Home Assistant requirements
 
-On your Home Assistant you must have configured several integrations
+On your Home Assistant you must have configured several add-ons
 - **Mosquito broker (MQTT)**
   - define 2 topics to send and receive SMS (by default `send_sms` and `sms_received` are proposed)
 - **Samba Share**
