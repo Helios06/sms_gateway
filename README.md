@@ -69,7 +69,7 @@ Automation and Script example
         enabled: true
         - service: script.script_send_sms
           data:
-            mobile: "0632321425"
+            mobile: "06xxxxxxxx"
             txt: \"Hello\" de Léonard
     mode: single
         
