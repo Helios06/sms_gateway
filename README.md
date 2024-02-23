@@ -1,26 +1,25 @@
 sms_gateway
 ===========
 
-
-This project provides à SMS gateway to `send` and `receive` SMS
+This project provides à SMS gateway to send and receive SMS
 using a GSM USB dongle. 
 
 So far works only in modem mode.
 
 Communication / integration with Home Assistant is realized 
 using 2 MQTT topics. One for HA scripts to send SMS (`send_sms`) and another one to handle 
-SMS reception and passing back SMS to Home Assistant (`sms-received`)
+SMS reception and passing back SMS to Home Assistant (`sms_received`)
 
 See repo: https://github.com/Helios06/sms_gateway
 
-# Version
-**sms_gateway** v1.0.6
+## Version
+**sms_gateway** v1.0.7
 
-# Build
+## Build
 
 Use the provided _Dockerfile_ and _run.sh_ to build and run the image.
 
-# Home Assistant requirements
+## Home Assistant requirements
 
 On your Home Assistant you must have configured several add-ons
 - **Mosquito broker (MQTT)**
@@ -28,7 +27,7 @@ On your Home Assistant you must have configured several add-ons
 - **Samba Share**
   - used to update add-on local directory on your Home Assistant installation.
   
-# Add-on configuration
+## Add-on configuration
 
     GSM_Mode: "Choose here 'modem' or 'api'"
     GSM_Device: "/dev/ttyUSB1"
@@ -54,7 +53,7 @@ MQTT_Receive: Topic on which add-on will publish received SMS
 MQTT_Send: Topic on which HA will publish SMS to be sent by the add-on
 
 
-### Sending SMS exemple
+### Sending SMS example
 Automation and Script example
 
     alias: test_send_sms
@@ -83,7 +82,7 @@ Automation and Script example
           payload_template: "{\"to\": \"{{mobile}}\", \"txt\": \"{{txt}}\"}"
     mode: single
 
-### Receiving SMS exemple
+### Receiving SMS example
 Automation and Script example
 
     alias: sms-received
@@ -118,7 +117,7 @@ Automation and Script example
     mode: single
 
 
-## Contributors
+### Contributors
 
 - See [contributors page](https://github.com/Helios06/sms_gateway) for a list of contributors.
 

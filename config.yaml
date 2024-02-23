@@ -1,6 +1,7 @@
 name: "SMS Gateway"
-description: "SMS Gateway to MQTT on Huawei USB Dongle"
-version: "1.0.6"
+description: "SMS Gateway to MQTT on GSM USB Dongle"
+version: "1.0.7"
+url: https://github.com/Helios06/sms_gateway
 slug: "sms_gateway"
 init: false
 arch:
