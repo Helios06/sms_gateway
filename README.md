@@ -86,9 +86,6 @@ Automation and Script example
 ### Receiving SMS exemple
 Automation and Script example
 
-
-### Receive SMS example
-
     alias: sms-received
     description: "SMS received is JSON -> {\"from\": new_sms['Number'], \"txt\": new_sms['Msg']}"
     trigger:
