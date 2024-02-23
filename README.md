@@ -51,7 +51,7 @@ GSM_AUTH: Comma separated list of authorized mobile numbers to receive sms from.
 
 MQTT_Receive: Topic on which add-on will publish received SMS
 
-MQTT_Send: Topic on which HA will publish SMS to be send by the add-on
+MQTT_Send: Topic on which HA will publish SMS to be sent by the add-on
 
 
 ### Sending SMS exemple
