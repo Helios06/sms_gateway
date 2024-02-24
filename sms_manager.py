@@ -38,19 +38,20 @@ def on_message(client, userdata, msg):
     global sms_gateway, mqtt_client
 
     logging.info("")
-    logging.info(f"Received SMS Message to send")
-    logging.info(f"... JSON UTF-8 Message")
-    logging.info(msg.payload)
+    logging.info(f"MQTT send message received")
+    logging.debug(f"... JSON UTF-8 Message")
+    logging.debug(msg.payload)
     message = json.loads(msg.payload)
+    logging.info(f"... %s", message["txt"])
     sms_gateway.sendSmsToNumber(message["to"], message["txt"])
 
 
-def main_modem(options):
+def main_modem(loglevel, options):
     global sms_gateway, mqtt_client
 
     # Start gateway
     logging.info('Starting SMS gateway')
-    sms_gateway = gsm("Huawei", options.mode, options.device, options.pin, options.auth, options.recv, mqtt_client)
+    sms_gateway = gsm(loglevel, "Huawei", options.mode, options.device, options.pin, options.auth, options.recv, mqtt_client)
     sms_gateway.start()
     while not sms_gateway.Ready:
         pass
@@ -59,6 +60,7 @@ def main_modem(options):
     mqtt_client.subscribe("send_sms")
     logging.info('... Subscribing done')
 
+    logging.info('')
     logging.info('Entering MQTT endless loop')
     mqtt_client.loop_forever()
     logging.info('... Leaving MQTT endless loop')
@@ -67,18 +69,6 @@ def main_modem(options):
 def main(args=None):
     global mqtt_client
 
-    # set logger
-    #logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
-    logging.basicConfig(level=logging.INFO)
-
-    # Handle Interrupt and termination signals
-    logging.info("")
-    logging.info('Preparing signal handling for termination')
-    signal.signal(signal.SIGINT, signal_handler)  # Handle CTRL-C signal
-    signal.signal(signal.SIGTERM, signal_handler)  # Termination signal
-    logging.info('.... signal handling for termination done')
-
-    logging.info('Parsing arguments')
     try:
         parser = argparse.ArgumentParser(description="Name Server command line launcher")
         parser.add_argument("--mode", dest="mode", help="modem or api", default="modem")
@@ -91,20 +81,48 @@ def main(args=None):
         parser.add_argument("-p", "--port", dest="port", help="mqtt port", default=0)
         parser.add_argument("--send", dest="send", help="mqtt send", default="send_sms")
         parser.add_argument("--recv", dest="recv", help="mqtt receive", default="sms_received")
+        parser.add_argument("--log", dest="logging", help="addon logging level", default="INFO")
         options = parser.parse_args(args)
-        logging.info('... Arguments parsed:')
-        logging.info('...... mode is: '+options.mode)
-        logging.info('...... device is: '+options.device)
-        logging.info('...... pin is: '+options.pin)
-        logging.info('...... auth is: '+options.auth)
-        logging.info('...... mqtt user is: '+options.user)
-        logging.info('...... mqtt user secret is: '+options.secret)
-        logging.info('...... mqtt host is: '+options.host)
-        logging.info('...... mqtt port is: '+options.port)
-        logging.info('...... mqtt send is: '+options.send)
-        logging.info('...... mqtt recv is: '+options.recv)
     except (Exception,):
         return None
+
+    # DEBUG INFO WARNING ERROR CRITICAL
+    log_level = logging.DEBUG
+    if options.logging == "DEBUG":
+        log_level = logging.DEBUG
+    if options.logging == "INFO":
+        log_level = logging.INFO
+    if options.logging == "WARNING":
+        log_level = logging.WARNING
+    if options.logging == "ERROR":
+        log_level = logging.ERROR
+    if options.logging == "CRITICAL":
+        log_level = logging.CRITICAL
+
+    # set logger
+    #logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
+    logging.basicConfig(level=log_level)
+
+    logging.info('')
+    logging.info('Arguments parsed:')
+    logging.info('... mode is: '+options.mode)
+    logging.info('... device is: '+options.device)
+    logging.info('... pin is: '+options.pin)
+    logging.info('... auth is: '+options.auth)
+    logging.info('... mqtt user is: '+options.user)
+    logging.info('... mqtt user secret is: '+options.secret)
+    logging.info('... mqtt host is: '+options.host)
+    logging.info('... mqtt port is: '+options.port)
+    logging.info('... mqtt send is: '+options.send)
+    logging.info('... mqtt recv is: '+options.recv)
+    logging.info('... addon logging is: '+options.logging)
+
+    # Handle Interrupt and termination signals
+    logging.info("")
+    logging.info('Preparing signal handling for termination')
+    signal.signal(signal.SIGINT, signal_handler)  # Handle CTRL-C signal
+    signal.signal(signal.SIGTERM, signal_handler)  # Termination signal
+    logging.info('.... signal handling for termination done')
 
     # Handle MQTT
     logging.info('Connecting to MQTT broker')
@@ -122,7 +140,7 @@ def main(args=None):
     logging.info('... Connected to MQTT broker: '+broker+':'+str(port)+' on topic: '+topic)
 
     if options.mode == 'modem':
-        main_modem(options)
+        main_modem(log_level, options)
     else:
         logging.info('Error ! specify options "mode"')
     pass
