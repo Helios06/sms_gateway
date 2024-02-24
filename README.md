@@ -2,9 +2,9 @@ sms_gateway
 ===========
 
 This project provides à SMS gateway to send and receive SMS
-using a GSM USB dongle. 
+using a GSM usb dongle. 
 
-So far works only in modem mode.
+So far works only in "modem" mode.
 
 Communication / integration with Home Assistant is realized 
 using 2 MQTT topics. One for HA scripts to send SMS (`send_sms`) and another one to handle 
@@ -12,7 +12,7 @@ SMS reception and passing back SMS to Home Assistant (`sms_received`)
 
 
 ## Version
-**sms_gateway** v1.0.7
+**sms_gateway** v1.0.8
 
 ## Build
 
@@ -21,7 +21,7 @@ Use the provided _Dockerfile_ and _run.sh_ to build and run the image.
 ## Home Assistant requirements
 
 On your Home Assistant you must have configured 2 needed add-ons
-- **MQTT (like Mosquito broker)**
+- **MQTT (used Mosquito broker in dev/test)**
   - define 2 topics to send and receive SMS (by default `send_sms` and `sms_received` are proposed)
 - **Samba Share**
   - used to update add-on local directory on your Home Assistant installation.
@@ -38,6 +38,7 @@ On your Home Assistant you must have configured 2 needed add-ons
     MQTT_Password: mqtt
     MQTT_Receive: sms_received
     MQTT_Send: send_sms
+    ADDON_Logging: INFO
 
 GSM_Mode : 'modem' ('api' under construction)
 
@@ -51,6 +52,7 @@ MQTT_Receive: Topic on which add-on will publish received SMS
 
 MQTT_Send: Topic on which HA will publish SMS to be sent by the add-on
 
+ADDON_Logging: python logging levels (DEBUG INFO WARNING ERROR CRITICAL)
 
 ### Sending SMS example
 Automation and Script example

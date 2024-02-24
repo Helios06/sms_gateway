@@ -40,7 +40,7 @@ class gsm(gsm_io):
     ATCREG = "AT+CREG?"  # registered on network ?
     ATCNMI = "AT+CNMI=2,1,0,0,0"  # when sms arrives CMTI send to pc
 
-    def __init__(self, name: str, mode: str, device: str, pin: str, auth: str, recv: str, mqtt_client):
+    def __init__(self, loglevel, name: str, mode: str, device: str, pin: str, auth: str, recv: str, mqtt_client):
         self.GsmReaderThread = None
         self.GsmMode = mode
         self.MQTTClient = mqtt_client
@@ -65,9 +65,10 @@ class gsm(gsm_io):
         self.GsmIoCMGLReceived = False
         self.GsmIoCMGRReceived = False
         # set logger
+        # DEBUG INFO WARNING ERROR CRITICAL
         # logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
-        logging.basicConfig(level=logging.INFO)
-        gsm_io.__init__(self, device)  # since inherited, needs to be called explicitly
+        logging.basicConfig(level=loglevel)
+        gsm_io.__init__(self, loglevel, device)  # since inherited, needs to be called explicitly
 
     def __del__(self):
         gsm_io.__del__(self)  # since inherited, needs to be called explicitly
@@ -189,8 +190,8 @@ class gsm(gsm_io):
     @staticmethod
     def encodeUTF8toJSON(bytes_message):
         # Be sure to escape " characters with \"
-        logging.info('... Encode UTF-8 to JSON')
-        logging.info(list(bytes_message))
+        logging.debug('... Encode UTF-8 to JSON')
+        logging.debug(list(bytes_message))
         result = []
         for b in bytes_message:
             if b == '"':
@@ -200,8 +201,8 @@ class gsm(gsm_io):
 
     @staticmethod
     def decodeGSM7toUTF8(bytes_message):
-        logging.info('... Decoding GSM-7 to UTF-8')
-        logging.info(list(bytes_message))
+        logging.debug('... Decoding GSM-7 to UTF-8')
+        logging.debug(list(bytes_message))
         result = []
         for b in bytes_message:         # b is code value of character
             result.append(sms_alpha[b])
@@ -212,7 +213,7 @@ class gsm(gsm_io):
         # UTF-8 double byte character will be replaced by specific
         # GSM alphabet code
         message_list = list(bytes(message, 'utf-8'))
-        logging.info('...... Encoding UTF-8 to GSM-7')
+        logging.debug('...... Encoding UTF-8 to GSM-7')
         waitCode195 = False
         waitCode194 = False
         waitCode206 = False
@@ -322,7 +323,7 @@ class gsm(gsm_io):
                         result += b'\x11'   # --> _
                     else:
                         result += bytes([c])
-        logging.info(result)
+        logging.debug(result)
         sms = result + b'\x1A'
         return sms
 

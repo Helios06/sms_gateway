@@ -10,7 +10,7 @@ import  logging
 
 class gsm_io:
 
-    def __init__(self, device):
+    def __init__(self, loglevel, device):
         self.GsmSerial              = serial.Serial()
         self.GsmDevice              = device
         self.GsmIoProtocolSem       = Lock()
@@ -33,7 +33,7 @@ class gsm_io:
         self.Opened                 = False
         self.Debug                  = False
         # logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
-        logging.basicConfig(level=logging.INFO)
+        logging.basicConfig(level=loglevel)
 
     def __del__(self):
         if self.Opened:
@@ -60,15 +60,15 @@ class gsm_io:
                 logging.info('...... device is opened on '+self.GsmDevice)
             else:
                 self.Opened = False
-                logging.info('...... device is still closed, could not open '+self.GsmDevice)
+                logging.error('...... device is still closed, could not open '+self.GsmDevice)
         except (Exception,):
-            logging.info('...... device exception while opening '+self.GsmDevice)
+            logging.error('...... device exception while opening '+self.GsmDevice)
         return  self.Opened
 
     def closeGsmIoDevice(self):
         self.GsmSerial.close()
         if self.GsmSerial.is_open:
-            logging.info('... Gsm is still opened ')
+            logging.error('... Gsm is still opened ')
         else:
             self.Opened = False
             logging.info('... Gsm is closed ')

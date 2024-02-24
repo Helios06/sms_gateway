@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.0.8
+
+- Handling python logging level 
+- updating config.yaml to new format for 'devices' (list)
+
 ### 1.0.7
 
 - updating README.md, adding CHANGELOG.md
