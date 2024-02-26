@@ -96,6 +96,7 @@ class gsm(gsm_io):
 
     def initGsmDevice(self):
         if self.Opened:
+            logging.debug("Init GSM device")
             self.GsmApiSem.acquire()
             frame = bytes(gsm.ATZ, 'ascii')
             self.writeCommandAndWaitOK(frame)
@@ -120,6 +121,9 @@ class gsm(gsm_io):
             frame = bytes(gsm.ATCMGD+"0,4", 'ascii')
             self.writeCommandAndWaitOK(frame)
             self.GsmApiSem.release()
+            logging.debug("... Init GSM device done")
+        else:
+            logging.error("Init GSM device, not opened !")
 
     def sendSmsToNumber(self, number, message):
         if self.Opened:
@@ -156,6 +160,8 @@ class gsm(gsm_io):
             self.GsmApiSem.release()
             logging.info(f"...... SMS sent")
             logging.info("")
+        else:
+            logging.error("GSM device, not opened !")
 
     # Start activity thread
     def startGsmReader(self):
@@ -328,14 +334,18 @@ class gsm(gsm_io):
         return sms
 
     def isAuthorized(self, number):
+        logging.debug(f"... isAuthorized: %s", number)
         if number in self.Auth:
+            logging.debug("...... True")
             return True
+        logging.debug("...... False")
         return False
 
     def readNewSms(self):
         # Read for MQTT in JSON
         result = None
         if self.Opened:
+            logging.debug("... readNewSMS")
             self.GsmApiSem.acquire()
             self.SmsList = []
             self.GsmIoCMGLReceived = False
@@ -375,4 +385,7 @@ class gsm(gsm_io):
                     result = None
             except (Exception,):
                 result = None
+        else:
+            logging.error("... readNewSMS, device not opened")
+            return result
         return result

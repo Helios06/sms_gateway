@@ -137,7 +137,7 @@ def main(args=None):
     mqtt_client.username_pw_set(user, password)  # see Mosquitto broker config
     # mqtt_client.tls_set()
     mqtt_client.connect(broker)
-    logging.info('... Connected to MQTT broker: '+broker+':'+str(port)+' on topic: '+topic)
+    logging.info('... Listening to MQTT broker: '+broker+':'+str(port)+' on topic: '+topic)
 
     if options.mode == 'modem':
         main_modem(log_level, options)
