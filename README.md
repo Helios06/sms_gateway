@@ -2,17 +2,43 @@ sms_gateway
 ===========
 
 This project provides à SMS gateway to send and receive SMS
-using a GSM usb dongle. 
-
-So far works only in "modem" mode.
+using a USB Dongle Modem.
 
 Communication / integration with Home Assistant is realized 
 using 2 MQTT topics. One for HA scripts to send SMS (`send_sms`) and another one to handle 
 SMS reception and passing back SMS to Home Assistant (`sms_received`)
 
+Your GSM modem must handle AT commands/responses:
+
+    ATZ = "ATZ"                   # reset modem
+    ATE0 = "ATE0"                 # set echo off
+    ATE1 = "ATE1"                 # set echo on
+    ATCLIP = "AT+CLIP?"           # get calling line identification presentation
+    ATCMEE = "AT+CMEE=1"          # set extended error
+    #ATCPIN = "AT+CPIN=\"0000\""  # set pin code
+    #ATCLCK0 = "AT+CLCK=\"SC\",0,\"0000\""  # disable code pin check, pin=0000
+    #ATCLCK1 = "AT+CLCK=\"SC\",1,\"0000\""  # enable code pin check, pin=0000
+    ATCSCS = "AT+CSCS=\"GSM\""    # force GSM mode for SMS
+    ATCMGF = "AT+CMGF=1"          # enable sms in text mode
+    ATCSDH = "AT+CSDH=1"          # enable more fields in sms read
+    ATCMGS = "AT+CMGS="           # send message with prompt
+    ATCMGD = "AT+CMGD="           # delete messages: =0,4 -> 4 means ignore the value 0 of index and delete all SMS messages from the message storage area
+    ATCMGL = "AT+CMGL="           # list all messages
+    ATCMGR = "AT+CMGR="           # read message by index in storage
+    ATCMGW = "AT+CMGW="           # write
+    ATCMSS = "AT+CMSS="           # send message by index in storage
+    ATCPMS = "AT+CPMS=\"ME\",\"ME\",\"ME\""  # storage is Mobile
+    ATCSQ = "AT+CSQ"              # signal strength
+    ATCREG = "AT+CREG?"           # registered on network ?
+    ATCNMI = "AT+CNMI=2,1,0,0,0"  # when sms arrives CMTI send to pc
+
+
+This add-on is NOT READY yet for some modem from Huawei providing full 
+network with Hilink. You will have to wait for a future release.
+
 
 ## Version
-**sms_gateway** v1.0.8
+**sms_gateway** v1.0.9
 
 ## Build
 
@@ -117,6 +143,13 @@ Automation and Script example
               "{{trigger.payload_json.txt}} ok"}
     mode: single
 
+### Dev/Tests environment where the add-on is actually produced
+
+Raspberry PI4B
+- Core 2024.2.3
+- Supervisor 2024.02.0 
+- Operating System 11.5 
+- Frontend 20240207.1
 
 ### Contributors
 

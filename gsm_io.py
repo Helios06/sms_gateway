@@ -66,6 +66,7 @@ class gsm_io:
         return  self.Opened
 
     def closeGsmIoDevice(self):
+        logging.info('... trying to close GSM device')
         self.GsmSerial.close()
         if self.GsmSerial.is_open:
             logging.error('... Gsm is still opened ')

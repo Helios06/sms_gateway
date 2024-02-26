@@ -1,6 +1,6 @@
 name: "SMS Gateway"
 description: "SMS Gateway for MQTT using a usb GSM dongle"
-version: "1.0.8"
+version: "1.0.9"
 url: https://github.com/Helios06/sms_gateway
 slug: "sms_gateway"
 init: false
@@ -35,4 +35,4 @@ schema:
   MQTT_Send: str
   ADDON_Logging: str
 startup: services
-devices: ["/dev/ttyACM0:/dev/ttyACM0", "/dev/ttyACM1:/dev/ttyACM1", "/dev/ttyUSB0:/dev/ttyUSB0", "/dev/ttyUSB1:/dev/ttyUSB1", "/dev/ttyUSB2:/dev/ttyUSB2"]
+devices: [/dev/ttyUSB0,/dev/ttyUSB1]

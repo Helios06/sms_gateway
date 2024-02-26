@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.0.9
+- updating README.md, CHANGELOG.md and config.yaml
+- improving logs
+
 ### 1.0.8
 
 - Handling python logging level 
