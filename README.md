@@ -57,7 +57,7 @@ On your Home Assistant you must have configured 2 needed add-ons
     GSM_Mode: modem
     GSM_Device: /dev/ttyUSB1
     GSM_PIN: 0000
-    GSM_AUTH: "+336XXXXXXXX,+336YYYYYYYY"
+    GSM_AUTH: +336XXXXXXXX,+336YYYYYYYY
     MQTT_Host: homeassistant.local
     MQTT_Port: 1883
     MQTT_User: mqtt
