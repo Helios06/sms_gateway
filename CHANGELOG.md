@@ -1,6 +1,7 @@
 ## Changelog
 
 ### 1.1.0
+- updating README.md
 - modem reference added
 - license file added
 
