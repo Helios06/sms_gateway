@@ -1,6 +1,6 @@
 name: "SMS Gateway"
 description: "SMS Gateway for MQTT using a usb GSM dongle"
-version: "1.0.9"
+version: "1.1.0"
 url: https://github.com/Helios06/sms_gateway
 slug: "sms_gateway"
 init: false
@@ -14,7 +14,7 @@ options:
   GSM_Mode: "Choose here 'modem' or 'api'"
   GSM_Device: "/dev/ttyUSB1"
   GSM_PIN: "0000"
-  GSM_AUTH: " +336XXXXXXXX"
+  GSM_AUTH: "+336XXXXXXXX"
   MQTT_Host: "homeassistant.local"
   MQTT_Port: 1883
   MQTT_User: "mqtt"
