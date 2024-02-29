@@ -38,7 +38,7 @@ network with Hilink. You will have to wait for a future release.
 
 
 ## Version
-**sms_gateway** v1.0.9
+**sms_gateway** v1.1.0
 
 ## Build
 
@@ -146,6 +146,7 @@ Automation and Script example
 ### Dev/Tests environment where the add-on is actually produced
 
 Raspberry PI4B
+- GSM modem Huawei E3131
 - Core 2024.2.3
 - Supervisor 2024.02.0 
 - Operating System 11.5 
