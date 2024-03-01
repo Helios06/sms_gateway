@@ -1,7 +1,4 @@
 """
-    Copyright (c) Helios06, 2023-2024
-"""
-"""
 MIT License
 
 Copyright (c) 2023-2024  Helios  helios14_75@hotmail.fr
@@ -123,26 +120,34 @@ class gsm(gsm_io):
             self.GsmApiSem.acquire()
             frame = bytes(gsm.ATZ, 'ascii')
             self.writeCommandAndWaitOK(frame)
+            logging.debug("... ATZ sent")
             frame = bytes(gsm.ATE0, 'ascii')
             self.writeCommandAndWaitOK(frame)
+            logging.debug("... ATE0 sent")
             frame = bytes(self.ATCPIN, 'ascii')
             self.writeCommandAndWaitOK(frame)
-            frame = bytes(self.ATCLCK0, 'ascii')
-            self.writeCommandAndWaitOK(frame)
+            logging.debug("... ATCPIN sent")
             frame = bytes(gsm.ATCMGF, 'ascii')
             self.writeCommandAndWaitOK(frame)
+            logging.debug("... ATCMGF sent")
             frame = bytes(gsm.ATCNMI, 'ascii')
             self.writeCommandAndWaitOK(frame)
+            logging.debug("... ATCNMI sent")
             frame = bytes(gsm.ATCSCS, 'ascii')
             self.writeCommandAndWaitOK(frame)
+            logging.debug("... ATCSCS sent")
             frame = bytes(gsm.ATCPMS, 'ascii')
             self.writeCommandAndWaitOK(frame)
+            logging.debug("... ATCPMS sent")
             frame = bytes(gsm.ATCLIP, 'ascii')
             self.writeCommandAndWaitOK(frame)
+            logging.debug("... ATCLIP sent")
             frame = bytes(gsm.ATCSDH, 'ascii')
             self.writeCommandAndWaitOK(frame)
+            logging.debug("... ATCSDH sent")
             frame = bytes(gsm.ATCMGD+"0,4", 'ascii')
             self.writeCommandAndWaitOK(frame)
+            logging.debug("... ATCMGD sent")
             self.GsmApiSem.release()
             logging.debug("... Init GSM device done")
         else:
@@ -162,6 +167,7 @@ class gsm(gsm_io):
             data = gsm.ATCMGW+"\""+number+"\""
             frame = bytes(data, 'utf-8')
             self.writeCommandAndWaitOK(frame)           # writes bytes on modem
+            logging.debug("... ATCMGW sent")
             while not self.GsmIoPromptReceived:
                 time.sleep(0.001)
             # prepare (encode) and send message
@@ -175,10 +181,12 @@ class gsm(gsm_io):
                 time.sleep(0.001)
             while not self.GsmIoSmsIdReceived:
                 time.sleep(0.001)
+            logging.debug("... id received")
             # Id received is bytes
             data = gsm.ATCMSS+self.GsmIoMessageId.decode('ascii')
             frame = bytes(data, 'utf-8')               # writes bytes on modem
             self.writeCommandAndWaitOK(frame)
+            logging.debug("... ATCMSS sent")
             # cmss will arrive before 'ok'
             self.GsmApiSem.release()
             logging.info(f"...... SMS sent")
@@ -189,16 +197,20 @@ class gsm(gsm_io):
     # Start activity thread
     def startGsmReader(self):
         if self.Opened:
+            logging.debug("Starting GSM Reader")
             self.GsmReaderThread            = Thread(target=self.runGsmReaderThread)
             self.GsmReaderThread.daemon     = True
             self.GsmReaderThread.isRunning  = True
             self.GsmReaderThread.start()
+            logging.debug("... GSM Reader started")
 
     # Stop activity thread
     def stopGsmReader(self):
         if self.Opened:
+            logging.debug("Stopping GSM Reader")
             self.GsmReaderThread.isRunning = False
             self.GsmReaderThread.join()
+            logging.debug("... GSM Reader stopped")
 
     def runGsmReaderThread(self):
         # SMS Reader, will post to MQTT
@@ -213,6 +225,7 @@ class gsm(gsm_io):
                 new_sms['Msg'] = self.encodeUTF8toJSON(new_sms['Msg'])
                 json_message = {"from": new_sms['Number'], "txt": new_sms['Msg']}
                 logging.info("...... Publishing it to mqtt as JSON on topic sms_received")
+                logging.debug(json_message)
                 self.MQTTClient.publish(self.Recv, json.dumps(json_message))
             time.sleep(1)
 
@@ -368,7 +381,7 @@ class gsm(gsm_io):
         # Read for MQTT in JSON
         result = None
         if self.Opened:
-            logging.debug("... readNewSMS")
+            # logging.debug("... readNewSMS")
             self.GsmApiSem.acquire()
             self.SmsList = []
             self.GsmIoCMGLReceived = False
