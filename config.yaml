@@ -1,6 +1,6 @@
 name: "SMS Gateway"
 description: "SMS Gateway for MQTT using a usb GSM dongle"
-version: "1.1.0"
+version: "1.1.1"
 url: https://github.com/Helios06/sms_gateway
 slug: "sms_gateway"
 init: false
@@ -11,7 +11,7 @@ arch:
   - armv7
   - i386
 options:
-  GSM_Mode: "Choose here 'modem' or 'api'"
+  GSM_Mode: "Enter 'modem' or 'api'"
   GSM_Device: "/dev/ttyUSB1"
   GSM_PIN: "0000"
   GSM_AUTH: "+336XXXXXXXX"
