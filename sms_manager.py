@@ -1,14 +1,3 @@
-#
-#   sms_manager
-#   Copyright (c) Helios06, 2023-2024
-#
-#   Home Assistant addon with slug: sms_gateway
-#   Handles MQTT broker messages to send sms or for received sms
-#
-#   Log is generated  under HomeAssistant
-#   To display the log
-#       go to "add-ons" then "log"
-#
 """
 MIT License
 
@@ -32,7 +21,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-
 
 import paho.mqtt.client as mqtt
 import sys
@@ -99,10 +87,10 @@ def main(args=None):
         parser.add_argument("-d", "--device", dest="device", help="USB device name", default="/dev/USB0")
         parser.add_argument("--pin", dest="pin", help="code pin", default="-")
         parser.add_argument("--auth", dest="auth", help="authorized numbers", default="")
-        parser.add_argument("-u", "--user", dest="user", help="mqtt user", default="xxxx")
-        parser.add_argument("-s", "--secret", dest="secret", help="mqtt user password", default="xxxx")
-        parser.add_argument("-r", "--host", dest="host", help="mqtt host", default="")
-        parser.add_argument("-p", "--port", dest="port", help="mqtt port", default=0)
+        parser.add_argument("-u", "--user", dest="user", help="mqtt user", default="mqtt")
+        parser.add_argument("-s", "--secret", dest="secret", help="mqtt user password", default="mqtt")
+        parser.add_argument("-r", "--host", dest="host", help="mqtt host", default="homeassistant.local")
+        parser.add_argument("-p", "--port", dest="port", help="mqtt port", default="1883")
         parser.add_argument("--send", dest="send", help="mqtt send", default="send_sms")
         parser.add_argument("--recv", dest="recv", help="mqtt receive", default="sms_received")
         parser.add_argument("--log", dest="logging", help="addon logging level", default="INFO")

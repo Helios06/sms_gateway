@@ -1,8 +1,9 @@
 ## Changelog
 
-### 1.1.1
+### 1.1.2
 
 - updating CHANGELOG.md
+-  updating sms_manager.py for pycharm dev/test on Mac and local network
 
 ### 1.1.0
 
