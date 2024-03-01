@@ -4,6 +4,13 @@ sms_gateway
 This project provides à SMS gateway to send and receive SMS
 using a USB Dongle Modem.
 
+You will be able to send all GSM7 characters (extended characters not handled)
+
+    @£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞ\x1bÆæßÉ
+     !\"#¤%&'()*+,-./0123456789:;<=>?
+    ¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§
+    ¿abcdefghijklmnopqrstuvwxyzäöñüà
+
 Communication / integration with Home Assistant is realized 
 using 2 MQTT topics. One for HA scripts to send SMS (`send_sms`) and another one to handle 
 SMS reception and passing back SMS to Home Assistant (`sms_received`)
@@ -154,5 +161,6 @@ Raspberry PI4B
 
 ### Contributors
 
+- see https://github.com/Helios06/sms_gateway for last release
 - See [contributors page](https://github.com/Helios06/sms_gateway) for a list of contributors.
 

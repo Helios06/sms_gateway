@@ -1,7 +1,4 @@
 """
-   Copyright (c) Helios06, 2023-2024
-"""
-"""
 MIT License
 
 Copyright (c) 2023-2024  Helios  helios14_75@hotmail.fr
@@ -103,7 +100,7 @@ class gsm_io:
         data = frame + b'\r'
         self.writeData(data)
         while not self.GsmIoOKReceived:
-            time.sleep(0.001)
+            time.sleep(0.01)
         self.GsmIoOKReceived = False
 
     def writeData(self, frame: bytes):
@@ -158,6 +155,8 @@ class gsm_io:
                     elif 'ATE0\r\r\n' in frame.decode("ascii"):
                         pass
                     elif '+CME ERROR:' in frame.decode("ascii"):
+                        # logging.debug(f"............ %s", frame.decode("ascii"))
+                        # logging.debug(f"............ not critical")
                         self.GsmIoOKReceived = True
                     elif '+CMGW:' in frame.decode("ascii"):
                         self.GsmIoMessageId = frame[7:len(frame)-2]
