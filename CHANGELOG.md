@@ -1,11 +1,17 @@
 ## Changelog
 
+### 1.1.1
+
+- updating CHANGELOG.md
+
 ### 1.1.0
+
 - updating README.md
 - modem reference added
-- license file added
+- LICENSE file added
 
 ### 1.0.9
+
 - updating README.md, CHANGELOG.md and config.yaml
 - improving logs
 
