@@ -2,7 +2,7 @@ sms_gateway
 ===========
 
 ## Version
-**sms_gateway** v1.1.2
+**sms_gateway** v1.1.3
 
 This project provides à SMS gateway to send and receive SMS
 using a USB Dongle Modem.

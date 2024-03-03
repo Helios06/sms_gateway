@@ -1,11 +1,15 @@
 ## Changelog
 
+### 1.1.3
+
+- updating CHANGELOG.md
+- adding codenotary
+
 ### 1.1.2
 
 - updating CHANGELOG.md
 - updating sms_manager.py for pycharm dev/test on Mac and local network
 - changing mqtt port configuration parameter to string
-- adding codenotary
 
 ### 1.1.0
 
