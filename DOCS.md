@@ -1,6 +1,9 @@
 sms_gateway
 ===========
 
+## Version
+**sms_gateway** v1.1.2
+
 This project provides à SMS gateway to send and receive SMS
 using a USB Dongle Modem.
 
@@ -15,7 +18,7 @@ Communication / integration with Home Assistant is realized
 using 2 MQTT topics. One for HA scripts to send SMS (`send_sms`) and another one to handle 
 SMS reception and passing back SMS to Home Assistant (`sms_received`)
 
-Your GSM modem must handle AT commands/responses:
+Your GSM modem must handle the following AT commands/responses
 
     ATZ = "ATZ"                   # reset modem
     ATE0 = "ATE0"                 # set echo off
@@ -42,10 +45,6 @@ Your GSM modem must handle AT commands/responses:
 
 This add-on is NOT READY yet for some modem from Huawei providing full 
 network with Hilink. You will have to wait for a future release.
-
-
-## Version
-**sms_gateway** v1.1.1
 
 ## Build
 
