@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.1.4
+
+- updating CHANGELOG.md
+- adding apparmor.txt file
+- HA rating is now 7
+
 ### 1.1.3
 
 - updating CHANGELOG.md
