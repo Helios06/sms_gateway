@@ -3,7 +3,9 @@
 ### 1.1.2
 
 - updating CHANGELOG.md
--  updating sms_manager.py for pycharm dev/test on Mac and local network
+- updating sms_manager.py for pycharm dev/test on Mac and local network
+- changing mqtt port configuration parameter to string
+- adding codenotary, apparmor, ingress
 
 ### 1.1.0
 
