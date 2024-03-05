@@ -1,5 +1,5 @@
 name: "SMS Gateway"
-version: "1.1.4"
+version: "1.1.5"
 stage: stable
 slug: "sms_gateway"
 description: "SMS Gateway for MQTT using a usb GSM dongle"

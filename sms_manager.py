@@ -68,8 +68,8 @@ def main_modem(loglevel, options):
     while not sms_gateway.Ready:
         pass
 
-    logging.info('Subscribing on topic: send_sms')
-    mqtt_client.subscribe("send_sms")
+    logging.info('Subscribing on topic: '+options.send)
+    mqtt_client.subscribe(options.send)
     logging.info('... Subscribing done')
 
     logging.info('')
