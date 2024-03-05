@@ -80,7 +80,6 @@ class gsm(gsm_io):
         self.GsmIoPrompt = False
         self.GsmIoSmsIdReceived = False
         self.Opened = False
-        self.NameServerURI = ''
         self.SmsList = []
         self.GsmIoCMGLReceived = False
         self.GsmIoCMGRReceived = False

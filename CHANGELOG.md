@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.1.5
+- updating CHANGELOG.md
+- bug correction on mqtt topic (was not configurable)
+
 ### 1.1.4
 
 - updating CHANGELOG.md
