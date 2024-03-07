@@ -1,56 +1,55 @@
-sms_gateway
-===========
+# sms_gateway
 
-## Version
-**sms_gateway** v1.1.5
-
-This project provides à SMS gateway to send and receive SMS
+This add-on provides à SMS gateway to send and receive SMS
 using a USB Dongle Modem.
 
-You will be able to send all GSM7 characters (extended characters not handled)
+It handles all GSM7 characters (extended characters not handled)
 
     @£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞ\x1bÆæßÉ
      !\"#¤%&'()*+,-./0123456789:;<=>?
     ¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§
     ¿abcdefghijklmnopqrstuvwxyzäöñüà
 
-Communication / integration with Home Assistant is realized 
-using 2 MQTT topics. One for HA scripts to send SMS (`send_sms`) and another one to handle 
-SMS reception and passing back SMS to Home Assistant (`sms_received`)
+### Integration with Home Assistant 
+
+Communication/integration with Home Assistant is realized 
+using 2 MQTT topics. 
+- one for HA scripts to send SMS 
+  - topic name proposed is `send_sms` but is configurable
+- another one to handle SMS reception and passing them back to 
+Home Assistant
+  - topic name proposed is `sms_received` but is configurable
+
+### GSM dongle requirements
 
 Your GSM modem must handle the following AT commands/responses
 
-    ATZ = "ATZ"                   # reset modem
-    ATE0 = "ATE0"                 # set echo off
-    ATE1 = "ATE1"                 # set echo on
-    ATCLIP = "AT+CLIP?"           # get calling line identification presentation
-    ATCMEE = "AT+CMEE=1"          # set extended error
-    #ATCPIN = "AT+CPIN=\"0000\""  # set pin code
-    #ATCLCK0 = "AT+CLCK=\"SC\",0,\"0000\""  # disable code pin check, pin=0000
-    #ATCLCK1 = "AT+CLCK=\"SC\",1,\"0000\""  # enable code pin check, pin=0000
-    ATCSCS = "AT+CSCS=\"GSM\""    # force GSM mode for SMS
-    ATCMGF = "AT+CMGF=1"          # enable sms in text mode
-    ATCSDH = "AT+CSDH=1"          # enable more fields in sms read
-    ATCMGS = "AT+CMGS="           # send message with prompt
-    ATCMGD = "AT+CMGD="           # delete messages: =0,4 -> 4 means ignore the value 0 of index and delete all SMS messages from the message storage area
-    ATCMGL = "AT+CMGL="           # list all messages
-    ATCMGR = "AT+CMGR="           # read message by index in storage
-    ATCMGW = "AT+CMGW="           # write
-    ATCMSS = "AT+CMSS="           # send message by index in storage
-    ATCPMS = "AT+CPMS=\"ME\",\"ME\",\"ME\""  # storage is Mobile
-    ATCSQ = "AT+CSQ"              # signal strength
-    ATCREG = "AT+CREG?"           # registered on network ?
-    ATCNMI = "AT+CNMI=2,1,0,0,0"  # when sms arrives CMTI send to pc
+    ATZ = "ATZ"                               # reset modem
+    ATE0 = "ATE0"                             # set echo off
+    ATE1 = "ATE1"                             # set echo on
+    ATCLIP = "AT+CLIP?"                       # get calling line identification presentation
+    ATCMEE = "AT+CMEE=1"                      # set extended error
+    #ATCPIN = "AT+CPIN=\"0000\""              # set pin code
+    #ATCLCK0 = "AT+CLCK=\"SC\",0,\"0000\""    # disable code pin check, pin=0000
+    #ATCLCK1 = "AT+CLCK=\"SC\",1,\"0000\""    # enable code pin check, pin=0000
+    ATCSCS = "AT+CSCS=\"GSM\""                # force GSM mode for SMS
+    ATCMGF = "AT+CMGF=1"                      # enable sms in text mode
+    ATCSDH = "AT+CSDH=1"                      # enable more fields in sms read
+    ATCMGS = "AT+CMGS="                       # send message with prompt
+    ATCMGD = "AT+CMGD="                       # delete messages: =0,4 -> 4 means ignore the value 0 of index and delete all SMS messages from the message storage area
+    ATCMGL = "AT+CMGL="                       # list all messages
+    ATCMGR = "AT+CMGR="                       # read message by index in storage
+    ATCMGW = "AT+CMGW="                       # write
+    ATCMSS = "AT+CMSS="                       # send message by index in storage
+    ATCPMS = "AT+CPMS=\"ME\",\"ME\",\"ME\""   # storage is Mobile
+    ATCSQ = "AT+CSQ"                          # signal strength
+    ATCREG = "AT+CREG?"                       # registered on network ?
+    ATCNMI = "AT+CNMI=2,1,0,0,0"              # when sms arrives CMTI send to pc
 
-
-This add-on is NOT READY yet for some modem from Huawei providing full 
+This add-on is `NOT READY` yet for some modem from Huawei providing full 
 network with Hilink. You will have to wait for a future release.
 
-## Build
-
-Use the provided _Dockerfile_ and _run.sh_ to build and run the image.
-
-## Home Assistant requirements
+### Home Assistant requirements
 
 On your Home Assistant you must have configured 2 needed add-ons
 - **MQTT (used Mosquito broker in dev/test)**
@@ -58,10 +57,10 @@ On your Home Assistant you must have configured 2 needed add-ons
 - **Samba Share**
   - used to update add-on local directory on your Home Assistant installation.
   
-## Add-on configuration
+### Configuration example
 
     GSM_Mode: modem
-    GSM_Device: /dev/ttyUSB1
+    GSM_Device: /dev/serial/by-id/usb-HUAWEI_HUAWEI_Mobile-if00-port0
     GSM_PIN: 0000
     GSM_AUTH: +336XXXXXXXX,+336YYYYYYYY
     MQTT_Host: homeassistant.local
@@ -72,21 +71,31 @@ On your Home Assistant you must have configured 2 needed add-ons
     MQTT_Send: send_sms
     ADDON_Logging: INFO
 
-GSM_Mode : 'modem' ('api' under construction)
+- GSM_Mode : 
+  - 'modem' ('api' under construction)
+- GSM_Device: 
+    - /dev/ttyUSBx
+    - /dev/ttyACMx
+    - /dev/serial/by-id/...... (this one is preferable)
+      - it is recommended to use a "by-id" path to the 
+      device if one exists, as it is not subject to change if other devices are added
+      to the system. 
+      - You may find the correct value for this by going to Settings
+      -> System -> Hardware and then clicking the three dots menu and selecting All Hardware.
+- GSM_PIN: 
+  - Pin code of the Sim
+- GSM_AUTH: 
+  - Comma separated list of authorized mobile numbers to receive sms from. 
+Other will be rejected by the add-on
+- MQTT_Receive: 
+  - Topic on which add-on will publish received SMS
+- MQTT_Send: 
+  - Topic on which HA will publish SMS to be sent by the add-on
+- ADDON_Logging: 
+  - use python logging levels 
+    - DEBUG, INFO, WARNING, ERROR, CRITICAL
 
-GSM_Device: where your USB dongle device is configured
-
-GSM_PIN: Pin code of the Sim
-
-GSM_AUTH: Comma separated list of authorized mobile numbers to receive sms from. Other will be rejected by the add-on
-
-MQTT_Receive: Topic on which add-on will publish received SMS
-
-MQTT_Send: Topic on which HA will publish SMS to be sent by the add-on
-
-ADDON_Logging: python logging levels (DEBUG INFO WARNING ERROR CRITICAL)
-
-### Sending SMS example
+### Home Assistant Sending SMS example
 Automation and Script example
 
     alias: test_send_sms
@@ -115,7 +124,7 @@ Automation and Script example
           payload_template: "{\"to\": \"{{mobile}}\", \"txt\": \"{{txt}}\"}"
     mode: single
 
-### Receiving SMS example
+### Home Assistant Receiving SMS example
 Automation and Script example
 
     alias: sms-received
@@ -149,17 +158,38 @@ Automation and Script example
               "{{trigger.payload_json.txt}} ok"}
     mode: single
 
-### Dev/Tests environment where the add-on is actually produced
+### Dev/Tests environment where the add-on is produced
 
-Raspberry PI4B
-- GSM modem Huawei E3131
-- Core 2024.2.5
-- Supervisor 2024.02.0 
-- Operating System 12.0
-- Frontend 20240207.1
+- Raspberry PI4B using
+  - GSM modem Huawei E3131
+  - Core 2024.2.5
+  - Supervisor 2024.02.0 
+  - Operating System 12.0
+  - Frontend 20240207.1
 
 ### Contributors
 
 - see https://github.com/Helios06/sms_gateway for last release
 - See [contributors page](https://github.com/Helios06/sms_gateway) for a list of contributors.
 
+### MIT License
+
+Copyright (c) 2023-2024  Helios  helios14_75@hotmail.fr
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
