@@ -84,7 +84,7 @@ def main(args=None):
     try:
         parser = argparse.ArgumentParser(description="Name Server command line launcher")
         parser.add_argument("--mode", dest="mode", help="modem or api", default="modem")
-        parser.add_argument("-d", "--device", dest="device", help="USB device name", default="/dev/USB0")
+        parser.add_argument("-d", "--device", dest="device", help="USB device name", default="/dev/serial/by-id/usb-HUAWEI_HUAWEI_Mobile-if00-port0")
         parser.add_argument("--pin", dest="pin", help="code pin", default="-")
         parser.add_argument("--auth", dest="auth", help="authorized numbers", default="")
         parser.add_argument("-u", "--user", dest="user", help="mqtt user", default="mqtt")

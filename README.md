@@ -1,22 +1,27 @@
-sms_gateway
-===========
+# sms_gateway
 
-This project provides à SMS gateway to send and receive SMS
+This add-on provides à SMS gateway to send and receive SMS
 using a USB Dongle Modem.
 
-Communication / integration with Home Assistant is realized 
-using 2 MQTT topics. One for HA scripts to send SMS (`send_sms`) and another one to handle 
-SMS reception and passing back SMS to Home Assistant (`sms_received`)
+![Supports aarch64 Architecture][aarch64-shield] ![Supports amd64 Architecture][amd64-shield] ![Supports armhf Architecture][armhf-shield] ![Supports armv7 Architecture][armv7-shield] ![Supports i386 Architecture][i386-shield]
 
-### Home Assistant requirements
+### Integration with Home Assistant 
 
-On your Home Assistant you must have configured 2 needed add-ons
-- **MQTT (used Mosquito broker in dev/test)**
-  - define 2 topics to send and receive SMS (by default `send_sms` and `sms_received` are proposed)
-- **Samba Share**
-  - used to update add-on local directory on your Home Assistant installation.
+Communication/integration with Home Assistant is realized 
+using 2 MQTT topics. 
+- one for HA scripts to send SMS 
+  - topic name proposed is `send_sms` but is configurable
+- another one to handle SMS reception and passing them back to 
+Home Assistant
+  - topic name proposed is `sms_received` but is configurable
 
 ### Repository and Contributors
 - see https://github.com/Helios06/sms_gateway for last release
 - See [contributors page](https://github.com/Helios06/sms_gateway) for a list of contributors.
 
+
+[aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
+[amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
+[armhf-shield]: https://img.shields.io/badge/armhf-yes-green.svg
+[armv7-shield]: https://img.shields.io/badge/armv7-yes-green.svg
+[i386-shield]: https://img.shields.io/badge/i386-yes-green.svg
