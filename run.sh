@@ -15,4 +15,7 @@ recv=$(bashio::config 'MQTT_Receive')
 logging=$(bashio::config 'ADDON_Logging')
 
 echo "run.sh: launching sms_manager.py"
-python3 /sms_manager.py --mode $mode -d $device --pin $pin --host $host --port $port -u $user -s $password --auth $auth --send $send --recv $recv --log $logging
+python3 /sms_manager.py --mode $mode \
+  -d $device --pin $pin --auth $auth \
+  --host $host --port $port -u $user -s $password --send $send --recv $recv \
+  --log $logging
