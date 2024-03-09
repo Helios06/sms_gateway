@@ -1,9 +1,12 @@
 ## Changelog
 
+### 1.1.7
+- updating CHANGELOG.md
+
 ### 1.1.6
 - updating CHANGELOG.md
 - changing device name in DOCS and configuration
-- 
+
 ### 1.1.5
 - updating CHANGELOG.md
 - bug correction on mqtt topic (was not configurable)

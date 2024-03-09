@@ -81,7 +81,7 @@ On your Home Assistant you must have configured 2 needed add-ons
       device if one exists, as it is not subject to change if other devices are added
       to the system. 
       - You may find the correct value for this by going to Settings
-      -> System -> Hardware and then clicking the three dots menu and selecting All Hardware.
+      -> System -> Hardware and then look for USB details.
 - GSM_PIN: 
   - Pin code of the Sim
 - GSM_AUTH: 
@@ -162,10 +162,10 @@ Automation and Script example
 
 - Raspberry PI4B using
   - GSM modem Huawei E3131
-  - Core 2024.2.5
-  - Supervisor 2024.02.0 
+  - Core 2024.3.0
+  - Supervisor 2024.02.1
   - Operating System 12.0
-  - Frontend 20240207.1
+  - Frontend 20240306.0
 
 ### Contributors
 
