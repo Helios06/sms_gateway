@@ -86,7 +86,7 @@ class gsm(gsm_io):
         # set logger
         # DEBUG INFO WARNING ERROR CRITICAL
         # logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
-        logging.basicConfig(level=loglevel)
+        logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=loglevel)
         gsm_io.__init__(self, loglevel, device)  # since inherited, needs to be called explicitly
 
     def __del__(self):

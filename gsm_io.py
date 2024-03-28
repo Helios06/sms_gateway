@@ -53,7 +53,7 @@ class gsm_io:
         self.Opened                 = False
         self.Debug                  = False
         # logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
-        logging.basicConfig(level=loglevel)
+        logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=loglevel)
 
     def __del__(self):
         if self.Opened:

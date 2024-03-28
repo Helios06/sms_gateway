@@ -1,5 +1,9 @@
 ## Changelog
 
+### 1.1.8
+- updating CHANGELOG.md
+- Logs handle date time
+- 
 ### 1.1.7
 - updating CHANGELOG.md
 
