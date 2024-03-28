@@ -162,10 +162,10 @@ Automation and Script example
 
 - Raspberry PI4B using
   - GSM modem Huawei E3131
-  - Core 2024.3.0
-  - Supervisor 2024.02.1
-  - Operating System 12.0
-  - Frontend 20240306.0
+  - Core 2024.3.3
+  - Supervisor 2024.03.1
+  - Operating System 12.1
+  - Frontend 20240307.0
 
 ### Contributors
 

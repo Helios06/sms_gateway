@@ -98,6 +98,7 @@ def main(args=None):
     except (Exception,):
         return None
 
+    # set logger
     # DEBUG INFO WARNING ERROR CRITICAL
     log_level = logging.DEBUG
     if options.logging == "DEBUG":
@@ -111,9 +112,8 @@ def main(args=None):
     if options.logging == "CRITICAL":
         log_level = logging.CRITICAL
 
-    # set logger
     #logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
-    logging.basicConfig(level=log_level)
+    logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=log_level)
 
     logging.info('')
     logging.info('Arguments parsed:')
