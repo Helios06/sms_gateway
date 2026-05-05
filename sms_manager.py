@@ -1,7 +1,7 @@
 """
 MIT License
 
-Copyright (c) 2023-2024  Helios  helios14_75@hotmail.fr
+Copyright (c) 2023-2026  Helios  philippemario.romano@hotmail.fr
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

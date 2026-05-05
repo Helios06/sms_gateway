@@ -1,9 +1,9 @@
 name: "SMS Gateway"
-version: "1.1.8"
+version: "1.2.0"
 stage: stable
 slug: "sms_gateway"
 description: "SMS Gateway for MQTT using a usb GSM dongle"
-codenotary: "helios14_75@hotmail.fr"
+codenotary: "philippemario.romano@hotmail.fr"
 url: "https://github.com/Helios06/sms_gateway"
 arch:
   - aarch64

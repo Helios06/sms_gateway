@@ -1,7 +1,7 @@
 """
 MIT License
 
-Copyright (c) 2023-2024  Helios  helios14_75@hotmail.fr
+Copyright (c) 2023-2026  Helios  philippemario.romano@hotmail.fr
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -124,63 +124,66 @@ class gsm_io:
         frame: bytes = b''
         while getattr(self.GsmIoActivityThread, "isRunning", True):
             time.sleep(0.001)
-            if self.GsmSerial.in_waiting >= 1:
-                # some data available
-                data: bytes = self.GsmSerial.read(1)
-                frame += data
-                if '> ' in frame.decode("ascii"):
-                    self.GsmIoOKReceived = True
-                    self.GsmIoPromptReceived = True
-                    frame = b''
-                if '\r\n' in frame.decode("ascii"):
-                    # received response
-                    if 'OK\r\n' in frame.decode("ascii"):
+            try:
+                if self.GsmSerial.in_waiting >= 1:
+                    # some data available
+                    data: bytes = self.GsmSerial.read(1)
+                    frame += data
+                    if '> ' in frame.decode("ascii"):
                         self.GsmIoOKReceived = True
-                        if self.RecordSmsText:
-                            self.SmsText = self.SmsText[:-4]    # remove 2 last crlf
-                            self.LastSmsText = self.SmsText
-                            self.SmsText = b''
-                            self.RecordSmsText = False
-                    elif '+CMGL:' in frame.decode("ascii"):
-                        sms_line = frame[0:len(frame)-1].decode("ascii")
-                        message_id = sms_line.split(',')[0].split(': ')[1]
-                        number = sms_line.split(',')[2][1:-1]  # remove both "
-                        status = sms_line.split(',')[1][1:-1]  # remove both "
-                        self.SmsList.append({'Id': message_id, 'Number': number, 'Status': status})
-                        self.GsmIoCMGLReceived = True
-                        # do not clear Waiting Response at this time
-                        # frame = b''
-                    elif 'ATZ\r\r\n' in frame.decode("ascii"):
-                        pass
-                    elif 'ATE0\r\r\n' in frame.decode("ascii"):
-                        pass
-                    elif '+CME ERROR:' in frame.decode("ascii"):
-                        # logging.debug(f"............ %s", frame.decode("ascii"))
-                        # logging.debug(f"............ not critical")
-                        self.GsmIoOKReceived = True
-                    elif '+CMGW:' in frame.decode("ascii"):
-                        self.GsmIoMessageId = frame[7:len(frame)-2]
-                        self.GsmIoSmsIdReceived = True
-                        # do not clear Waiting Response at this time
-                    elif '+CMSS:' in frame.decode("ascii"):
-                        self.GsmIoCMSSId = frame[7:len(frame)-2]
-                        self.GsmIoCMSSReceived = True
-                        # do not clear Waiting Response at this time
-                    elif '+CPMS:' in frame.decode("ascii"):
-                        # do not clear Waiting Response at this time
-                        pass
-                    elif '+CLIP:' in frame.decode("ascii"):
-                        # do not clear Waiting Response at this time
-                        pass
-                    elif '+CMGR:' in frame.decode("ascii"):
-                        # Now sms text will follow
-                        self.RecordSmsText = True
-                        self.GsmIoCMGRReceived = True
-                    elif '\r\n' in frame.decode("ascii"):
-                        if self.RecordSmsText:
-                            self.SmsText = self.SmsText+frame
+                        self.GsmIoPromptReceived = True
+                        frame = b''
+                    if '\r\n' in frame.decode("ascii"):
+                        # received response
+                        if 'OK\r\n' in frame.decode("ascii"):
+                            self.GsmIoOKReceived = True
+                            if self.RecordSmsText:
+                                self.SmsText = self.SmsText[:-4]    # remove 2 last crlf
+                                self.LastSmsText = self.SmsText
+                                self.SmsText = b''
+                                self.RecordSmsText = False
+                        elif '+CMGL:' in frame.decode("ascii"):
+                            sms_line = frame[0:len(frame)-1].decode("ascii")
+                            message_id = sms_line.split(',')[0].split(': ')[1]
+                            number = sms_line.split(',')[2][1:-1]  # remove both "
+                            status = sms_line.split(',')[1][1:-1]  # remove both "
+                            self.SmsList.append({'Id': message_id, 'Number': number, 'Status': status})
+                            self.GsmIoCMGLReceived = True
+                            # do not clear Waiting Response at this time
+                            # frame = b''
+                        elif 'ATZ\r\r\n' in frame.decode("ascii"):
+                            pass
+                        elif 'ATE0\r\r\n' in frame.decode("ascii"):
+                            pass
+                        elif '+CME ERROR:' in frame.decode("ascii"):
+                            # logging.debug(f"............ %s", frame.decode("ascii"))
+                            # logging.debug(f"............ not critical")
+                            self.GsmIoOKReceived = True
+                        elif '+CMGW:' in frame.decode("ascii"):
+                            self.GsmIoMessageId = frame[7:len(frame)-2]
+                            self.GsmIoSmsIdReceived = True
+                            # do not clear Waiting Response at this time
+                        elif '+CMSS:' in frame.decode("ascii"):
+                            self.GsmIoCMSSId = frame[7:len(frame)-2]
+                            self.GsmIoCMSSReceived = True
+                            # do not clear Waiting Response at this time
+                        elif '+CPMS:' in frame.decode("ascii"):
+                            # do not clear Waiting Response at this time
+                            pass
+                        elif '+CLIP:' in frame.decode("ascii"):
+                            # do not clear Waiting Response at this time
+                            pass
+                        elif '+CMGR:' in frame.decode("ascii"):
+                            # Now sms text will follow
+                            self.RecordSmsText = True
+                            self.GsmIoCMGRReceived = True
+                        elif '\r\n' in frame.decode("ascii"):
+                            if self.RecordSmsText:
+                                self.SmsText = self.SmsText+frame
+                            else:
+                                pass
                         else:
                             pass
-                    else:
-                        pass
-                    frame = b''
+                        frame = b''
+            except OSError as e:
+                pass;
