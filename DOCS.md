@@ -100,72 +100,83 @@ Automation and Script example
 
     alias: test_send_sms
     description: ""
-    trigger: []
-    condition: []
-    action:
-      - service: script.script_send_sms
-        data:
-          mobile: "06xxxxxxxx"
-          txt: "@£$¥èéùìòÇ"
-        enabled: true
-        - service: script.script_send_sms
-          data:
+    mode: single
+    triggers: []
+    conditions: []
+    actions:
+        - data:
+            mobile: "06xxxxxxxx"
+            txt: "@£$¥èéùìòÇ"
+          enabled: false
+          action: script.script_send_sms
+        - data:
             mobile: "06xxxxxxxx"
             txt: \"Hello\" de Léonard
-    mode: single
+          enabled: false
+          action: script.script_send_sms
         
     alias: script-send-sms
     sequence:
-      - service: mqtt.publish
-        data:
+      - data:
           qos: 0
           retain: false
           topic: send_sms
-          payload_template: "{\"to\": \"{{mobile}}\", \"txt\": \"{{txt}}\"}"
+          payload: "{\"to\": \"{{mobile}}\", \"txt\": \"{{txt}}\"}"
+        action: mqtt.publish
     mode: single
+
 
 ### Home Assistant Receiving SMS example
 Automation and Script example
 
-    alias: sms-received
+    alias: automation-sms-received
     description: "SMS received is JSON -> {\"from\": new_sms['Number'], \"txt\": new_sms['Msg']}"
-    trigger:
-      - platform: mqtt
-        topic: sms_received
-    condition: []
-    action:
+    triggers:
+      - topic: sms_received
+        trigger: mqtt
+    conditions: []
+    mode: single
+    actions:
         - alias: Check for "patio on"
           if:
             - condition: template
               value_template: "{{trigger.payload_json.txt|lower == 'patio on'}}"
           then:
-            - service: script.script_patio_on
-              data: {}
+            - data: {}
+              action: script.script_patio_on
+            - data:
+                qos: 0
+                retain: false
+                topic: send_sms
+                payload: "{\"to\": \"{{trigger.payload_json.from}}\", \"txt\": \"Patio allumé\"}"
+                action: mqtt.publish
         - alias: Check for "patio off"
           if:
             - condition: template
               value_template: "{{trigger.payload_json.txt|lower == 'patio off'}}"
           then:
-            - service: script.script_patio_off
-              data: {}
-        - service: mqtt.publish
+            - data: {}
+              action: script.script_patio_off
+            - data:
+               qos: 0
+               retain: false
+               topic: send_sms
+               payload: "{\"to\": \"{{trigger.payload_json.from}}\", \"txt\": \"Patio éteint\"}"
+               action: mqtt.publish
+	- metada: {}
           data:
-            qos: 0
-            retain: false
-            topic: send_sms
-            payload_template: >-
-              {"to": "{{trigger.payload_json.from}}", "txt":
-              "{{trigger.payload_json.txt}} ok"}
-    mode: single
-
+            my_message: "{{trigger.payload_json.txt}}"
+          enabled: true
+          action: script.script_notify_ha
+   
 ### Dev/Tests environment where the add-on is produced
 
 - Raspberry PI4B using
   - GSM modem Huawei E3131
-  - Core 2024.3.3
-  - Supervisor 2024.03.1
-  - Operating System 12.1
-  - Frontend 20240307.0
+  - Core 2026.4.4
+  - Supervisor 2026.04.2
+  - Operating System 17.2
+  - Frontend 20260325.8
 
 ### Contributors
 
@@ -174,7 +185,7 @@ Automation and Script example
 
 ### MIT License
 
-Copyright (c) 2023-2024  Helios  helios14_75@hotmail.fr
+Copyright (c) 2023-2026  Helios  philippemario.romano@hotmail.fr
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

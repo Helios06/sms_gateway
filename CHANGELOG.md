@@ -1,11 +1,17 @@
 ## Changelog
 
+### 1.2.0
+- 2026 update according to 2026 core supervisor and os
+
+### 1.1.9
+- fixing pyserial "in_waiting" error 
+
 ### 1.1.8
-- updating CHANGELOG.md
-- Logs handle date time
-- 
+- updating dockerfile for "FROM"
+
 ### 1.1.7
 - updating CHANGELOG.md
+- Logs handle date time
 
 ### 1.1.6
 - updating CHANGELOG.md
