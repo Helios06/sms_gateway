@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.2.1
+- 2026 documentation update
+- remove code notary
+- remove deprecated arch
+
 ### 1.2.0
 - 2026 update according to 2026 core supervisor and os
 
